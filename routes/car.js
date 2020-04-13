@@ -30,10 +30,10 @@ const { CarController } = require("../controllers");
 router.post("/",
   upload.single("car_imgs"), (req, res) => {
     console.log("dane");
-    console.log(req.file);
+    console.log(req.file.path);
     console.log(req.body);
 
-    CarController.saveCar(req.body, req.file.path, (err, car) => {
+    CarController.saveCar(req.body, req.file, (err, car) => {
       if (err) {
         res.status(400).json(err);
         // console.log("dane");

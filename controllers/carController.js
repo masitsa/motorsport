@@ -3,6 +3,7 @@ const Op = sequelize.Op;
 const Car = require("../models").Car;
 const Brand = require("../models").Brand;
 const Model = require("../models").Model;
+const Buffer = require('buffer').Buffer;
 
 const { createError, validateCarInput, isEmpty } = require("../validation");
 
@@ -117,7 +118,10 @@ module.exports = {
         "car_location",
         "car_model_id",
         [sequelize.col("model_car.model_name"), "model_name"],
-        //[sequelize.col("brand_car.brand_name"), "brand_name"],
+        [sequelize.col("model_car.brand_id"), "brand_id"],
+
+        [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
+        // [sequelize.col("model_car.brand_model.id"), "brand_id"],
         "car_price",
         "car_year",
         "car_transmission",
@@ -133,10 +137,22 @@ module.exports = {
           model: Model,
           as: "model_car",
           attributes: [],
+          include: [{
+            model: Brand,
+            as: "brand_model",
+            attributes: [],
+          }]
         },
       ],
     })
       .then((fetchedCar) => {
+        // for (let i = 0; i < fetchedCar.length; i++) {
+        //   console.log(fetchedCar[i])
+        //   let carimages = fetchedCar[i].car_imgs;
+        //   let buf = Buffer.from(carimages);
+        //   let base64 = buf.toString('base64');
+        //   //console.log(base64)
+        // }
         this.countCar(where, (err, total) => {
           if (err) {
             result(err, null);

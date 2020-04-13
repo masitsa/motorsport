@@ -259,7 +259,7 @@
       axios
         .get(`http://localhost:5005/brand`)
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           allBrands = res.data;
           // console.log(allBrands);
           showBrands(allBrands);
