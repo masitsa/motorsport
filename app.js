@@ -2,6 +2,8 @@
 const express = require("express");
 //initialize express app
 const app = express();
+const upload = require('express-fileupload');
+4
 // Ensble CORS
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -15,7 +17,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use('/uploads', express.static('uploads'));
 const bodyParser = require("body-parser");
 
 //Link bodyparser for url reading
@@ -30,8 +31,14 @@ app.use(
     limit: "10gb"
   })
 );
+app.use(upload())
+app.use('/uploads', express.static('uploads'));
 //import routes
-const { car, model, brand } = require("./routes");
+const {
+  car,
+  model,
+  brand
+} = require("./routes");
 
 //initialize the router
 app.use("/car", car);

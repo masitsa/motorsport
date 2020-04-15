@@ -14,6 +14,9 @@ module.exports = {
       car_location: {
         type: Sequelize.STRING
       },
+      phone_number: {
+        type: Sequelize.STRING
+      },
       car_model_id: {
         type: Sequelize.INTEGER
       },
@@ -27,7 +30,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       car_imgs: {
-        type: Sequelize.BLOB
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

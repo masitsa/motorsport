@@ -1,47 +1,46 @@
 const express = require("express");
 const router = express.Router();
 const multer = require('multer');
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
-    cb(null, true)
-  } else {
-    cb(null, false)
-  }
-}
+const fs = require('fs');
 
-var upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5
-  },
-  fileFilter: fileFilter
-});
-const { CarController } = require("../controllers");
+const {
+  CarController
+} = require("../controllers");
 
 //  @route POST customer
 router.post("/",
-  upload.single("car_imgs"), (req, res) => {
-    console.log("dane");
-    console.log(req.file.path);
-    console.log(req.body);
+  (req, res) => {
+    if (req.files) {
 
-    CarController.saveCar(req.body, req.file, (err, car) => {
-      if (err) {
-        res.status(400).json(err);
-        // console.log("dane");
-        // console.log(err)
-      } else {
-        res.status(200).json(car);
-      }
-    });
+      const file = req.files.file;
+
+      const fileName = file.name;
+
+      file.mv("./uploads/" + fileName, (err) => {
+        if (err) {
+          res.status(400).json({
+            error: {
+              upload: err.message
+            }
+          });
+        } else {
+          // console.log('success');
+          // res.status(200).json({
+          //   message: "Success"
+          // })
+          CarController.saveCar(req.body, fileName, (err, car) => {
+            if (err) {
+              res.status(400).json(err);
+              // console.log("dane");
+              // console.log(err)
+            } else {
+              res.status(200).json(car);
+            }
+          });
+        }
+      })
+
+    }
   });
 
 //  @route GET cars
@@ -50,21 +49,21 @@ router.post("/",
 router.get("/", (req, res) => {
   const page = parseInt(req.query.page) > 0 ? parseInt(req.query.page) : 0;
   const limit = parseInt(req.query.limit) > 0 ? parseInt(req.query.limit) : 10;
-  const order = req.query.hasOwnProperty("order")
-    ? req.query.order
-    : "car_title";
-  const ordermethod = req.query.hasOwnProperty("ordermethod")
-    ? req.query.ordermethod
-    : "ASC";
-  const car_title = req.query.hasOwnProperty("car_title")
-    ? req.query.car_title
-    : "";
-  const car_location = req.query.hasOwnProperty("car_location")
-    ? req.query.car_location
-    : "";
-  const car_transmission = req.query.hasOwnProperty("car_transmission")
-    ? req.query.car_transmission
-    : "";
+  const order = req.query.hasOwnProperty("order") ?
+    req.query.order :
+    "car_title";
+  const ordermethod = req.query.hasOwnProperty("ordermethod") ?
+    req.query.ordermethod :
+    "ASC";
+  const car_title = req.query.hasOwnProperty("car_title") ?
+    req.query.car_title :
+    "";
+  const car_location = req.query.hasOwnProperty("car_location") ?
+    req.query.car_location :
+    "";
+  const car_transmission = req.query.hasOwnProperty("car_transmission") ?
+    req.query.car_transmission :
+    "";
   //console.log("mansory");
   CarController.getAllCar(
     page,
