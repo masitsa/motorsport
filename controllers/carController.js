@@ -191,4 +191,40 @@ module.exports = {
         result(error, null);
       });
   },
+
+  getCarDetails(phone, result) {
+    // console.log("panamera");
+    Car.findOne({
+        attributes: [
+          "car_title",
+          "car_location",
+          "car_year",
+          "car_transmission",
+          "car_price", [sequelize.col("model_car.model_name"), "model_name"],
+          [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
+          // [sequelize.col("model_car.brand_model.id"), "brand_id"],
+        ],
+        raw: true,
+        where: {
+          phone_number: phone.phone_number
+        },
+        include: [{
+          model: Model,
+          as: "model_car",
+          attributes: [],
+          include: [{
+            model: Brand,
+            as: "brand_model",
+            attributes: [],
+          }]
+        }, ],
+      })
+      .then((car) => {
+        return result(null, car);
+      })
+      .catch((err) => {
+        const customError = createError(err);
+        result(customError, null);
+      });
+  }
 };

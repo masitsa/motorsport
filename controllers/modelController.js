@@ -1,15 +1,19 @@
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 const Model = require("../models").Model;
-const { createError } = require("../validation");
+const {
+  createError
+} = require("../validation");
 module.exports = {
   getAllModel(order, ordermethod, result) {
-    console.log("panamera");
+    //console.log("panamera");
     return Model.findAll({
-      attributes: ["model_name", "id", "brand_id"],
+        attributes: ["model_name", "id", "brand_id"],
 
-      order: [[order, ordermethod]],
-    })
+        order: [
+          [order, ordermethod]
+        ],
+      })
       .then((model) => {
         return result(null, model);
       })

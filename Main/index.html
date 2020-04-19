@@ -408,7 +408,7 @@
                 ' <i class="fas fa-cogs"></i> ' +
                 car.car_transmission +
                 ' </div>' +
-                '<div class="" onclick="showNumber(\'' + car.phone_number + '\')">' +
+                '<div class="" onclick="postWhatsapp(\'' + car.phone_number + '\')">' +
                 '<i class="fab fa-whatsapp"></i>' +
                 // car.phone_number +
                 ' </div>' +
@@ -417,6 +417,18 @@
             );
             document.getElementById("all_cars").innerHTML = cars.join();
         };
+
+    const postWhatsapp = (sellerPhoneNumber) => {
+      let url = `http://localhost:5005/car/whatsapp`;
+      let phone = {
+        phone_number: sellerPhoneNumber
+      };
+      axios.post(url, phone)
+        .then(res => {})
+        .catch(err => {
+          console.log(err)
+        })
+    }
 
 
 

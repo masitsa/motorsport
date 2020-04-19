@@ -273,7 +273,7 @@
       // console.log(allBrands);
       const brands = allBrands.map(
         (brand) =>
-          "<option value=" + brand.id + ">" + brand.brand_name + "</option>"
+        "<option value=" + brand.id + ">" + brand.brand_name + "</option>"
       );
 
       document.getElementById("car_brand").innerHTML = '<option value="">Select Brand</option>' + brands;
@@ -304,7 +304,7 @@
       let brand = parseInt(selectedCarBrand);
       const models = allModels.filter(car => car.brand_id === brand).map(
         (model) =>
-          "<option value=" + model.id + ">" + model.model_name + "</option>"
+        "<option value=" + model.id + ">" + model.model_name + "</option>"
       );
       document.getElementById("car_model").innerHTML = '<option value="">Select Model</option>' + models;
     };
@@ -315,6 +315,7 @@
   </script>
   <script>
     window.dataLayer = window.dataLayer || [];
+
     function gtag() {
       dataLayer.push(arguments);
     }
