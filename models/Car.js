@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING
       },
-      phone_number: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
       //car_brand_id: { allowNull: false, type: DataTypes.INTEGER },
       car_model_id: {
         allowNull: false,
@@ -22,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       car_year: {
         allowNull: false,
         type: DataTypes.DATE
+      },
+      brand_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER
       },
       car_transmission: {
         allowNull: false,
@@ -40,6 +40,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "car_model_id",
       onDelete: "CASCADE",
       as: "model_car"
+    });
+
+    Car.belongsTo(models.Brand, {
+      foreignKey: "brand_id",
+      onDelete: "CASCADE",
+      as: "brand_car"
     });
   };
   return Car;

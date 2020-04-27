@@ -20,6 +20,9 @@ module.exports = {
       car_model_id: {
         type: Sequelize.INTEGER
       },
+      brand_id: {
+        type: Sequelize.INTEGER
+      },
       car_year: {
         type: Sequelize.DATE
       },

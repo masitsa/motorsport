@@ -2,7 +2,7 @@
 const app = require("./app");
 
 //initialize app port
-const port = process.env.PORT || 5005;
+const port = process.env.PORT || 5002;
 
 //Run app on port
 app.listen(port, () => {

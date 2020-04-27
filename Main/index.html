@@ -378,7 +378,7 @@
         let allCars;
         const getAllCars = () => {
             axios
-                .get(`http://localhost:5005/car`)
+                .get(`http://localhost:5002/car`)
                 .then((res) => {
                     console.log(res.data);
                     allCars = res.data.items;
@@ -393,7 +393,7 @@
             const cars = allCars.map(
                 (car) =>
                 '<div class="card  pb-2 p-1 mb-5">' +
-                '<img src="http://localhost:5005/uploads/'+car.car_imgs+'" alt="" height="200px" width="200px">' +
+                '<img src="http://localhost:5002/uploads/'+car.car_imgs+'" alt="" height="200px" width="200px">' +
                 ' <div class="d-flex flex-row justify-content-between p-2 cardBorder">' +
                 '<div class="font-weight-bold"><i class="fab fa-bandcamp"></i> ' + car.car_title + '</div>' +
                 '<div class="p-1 price"><i class="fas fa-dollar-sign"></i> ' + car.car_price +
@@ -419,7 +419,7 @@
         };
 
     const postWhatsapp = (sellerPhoneNumber) => {
-      let url = `http://localhost:5005/car/whatsapp`;
+      let url = `http://localhost:5002/car/whatsapp`;
       let phone = {
         phone_number: sellerPhoneNumber
       };
@@ -465,13 +465,14 @@
             formData.append('car_location', carLocation);
             formData.append('phone_number', phoneNumber);
             formData.append('car_model_id', carModel);
+            formData.append('brand_id', carBrand);
             formData.append('car_year', carYear);
             formData.append('car_transmission', carTransmission);
             formData.append('car_price', carPrice);
             formData.append('file', carImage.files[0]);
 
             axios
-                .post(`http://localhost:5005/car`, formData)
+                .post(`http://localhost:5002/car`, formData)
                 .then((res) => {
                     console.log(res.data);
                     alert(res.data.message);
@@ -488,7 +489,7 @@
 
         const getCarBrand = () => {
             axios
-                .get(`http://localhost:5005/brand`)
+                .get(`http://localhost:5002/brand`)
                 .then((res) => {
                     // console.log(res.data);
                     allBrands = res.data;
@@ -536,7 +537,7 @@
         //model
         const getCarModel = () => {
             axios
-                .get(`http://localhost:5005/model`)
+                .get(`http://localhost:5002/model`)
                 .then((res) => {
                     // console.log(res.data);
                     allModels = res.data;

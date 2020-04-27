@@ -10,8 +10,6 @@ const {
 //  @route POST customer
 router.post("/",
   (req, res) => {
-    // console.log('shelby')
-    // console.log(req.body)
     if (req.files) {
       const file = req.files.file;
 
@@ -25,7 +23,7 @@ router.post("/",
             }
           });
         } else {
-          // console.log('success');
+          console.log('success');
           // res.status(200).json({
           //   message: "Success"
           // })
@@ -75,7 +73,10 @@ router.get("/", (req, res) => {
     car_location,
     car_transmission,
     (err, car) => {
+      // console.log('shelby')
+      // console.log(car)
       if (err) {
+        1
         res.status(400).json(err);
       } else {
         res.status(200).json(car);
@@ -127,16 +128,120 @@ router.post("/whatsapp",
     });
   })
 
-//search  brand
-const brand_name = req.query.hasOwnProperty("brand_name") ?
-  req.query.brand_name :
-  "";
-CarController.getCarBrand(brand_name,
-  (err, brand) => {
-    if (err) {
-      res.status(400).json(err);
-    } else {
-      res.status(200).json(brand);
-    }
+//search
+// router.get("/search", (req, res) => {
+//   const car_title = req.query.hasOwnProperty("car_title") ?
+//     req.query.car_title :
+//     "";
+//   const brand_name = req.query.hasOwnProperty("brand_name") ?
+//     req.query.brand_name :
+//     "";
+//   const model_name = req.query.hasOwnProperty("model_name") ?
+//     req.query.model_name :
+//     "";
+//   CarController.getCar(car_title, brand_name, model_name,
+//     (err, fetchedCar) => {
+//       if (err) {
+//         res.status(400).json(err);
+//         // console.log('brabus')
+//         console.log(err)
+//       } else {
+//         res.status(200).json(fetchedCar);
+//       }
+//     })
+// })
+
+router.post("/whatsappDetails",
+  (req, res) => {
+    // console.log('subaru')
+    // console.log(req.body)
+    let modelName = req.body.Body;
+
+    CarController.fetchCar(modelName, (err, fetchedcarDetails) => {
+      // console.log('bughatti')
+      // console.log(fetchedcarDetails)
+      if (err) {
+        res.status(400).json(err);
+        // console.log('bughatti')
+        // console.log(err)
+      } else {
+        // res.status(200).json(fetchedcarDetails);
+        const accountSid = 'AC06bf23db88d97129122e566668258434';
+        const authToken = '4dc8b2964c86f294c43480290a39c68d';
+        const client = require('twilio')(accountSid, authToken);
+        //carDetails
+        let title = fetchedcarDetails.car_title
+        let location = fetchedcarDetails.car_location
+        let year = fetchedcarDetails.car_year
+        let transmission = fetchedcarDetails.car_transmission
+        let price = fetchedcarDetails.car_price
+        let model = fetchedcarDetails.model_name
+        let brand = fetchedcarDetails.brand_name
+        let number = req.body.From
+        let allCarDetails = "These are available cars: title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
+        client.messages
+          .create({
+            from: 'whatsapp:+14155238886',
+            body: allCarDetails,
+            to: number
+          })
+          .then(message => console.log(message.sid))
+          .catch(err => {
+            //  console.log(err)
+            done()
+          })
+      }
+    });
+  })
+
+router.post("/allWhatsappDetails",
+  (req, res) => {
+    // console.log('FORESTER')
+    // console.log(req.body)
+    let modelName = req.body.Body;
+    CarController.fetchAllCars(modelName, (err, fetchedAllCarDetails) => {
+      if (err) {
+        res.status(400).json(err);
+      } else {
+        // console.log('chiron')
+        // console.log(fetchedAllCarDetails)
+        const accountSid = 'AC06bf23db88d97129122e566668258434';
+        const authToken = '4dc8b2964c86f294c43480290a39c68d';
+        const client = require('twilio')(accountSid, authToken);
+        let number = req.body.From
+        let imgUrl
+        //let allCarDetailsArray = [];
+        for (let i = 0; i < fetchedAllCarDetails.length; i++) {
+          //carDetails
+          let title = fetchedAllCarDetails[i].car_title
+          let location = fetchedAllCarDetails[i].car_location
+          let year = fetchedAllCarDetails[i].car_year
+          let transmission = fetchedAllCarDetails[i].car_transmission
+          let price = fetchedAllCarDetails[i].car_price
+          let model = fetchedAllCarDetails[i].model_name
+          let brand = fetchedAllCarDetails[i].brand_name
+          let images = fetchedAllCarDetails[i].car_imgs
+          imgUrl = "http://b0257933.ngrok.io/uploads/" + images
+          let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
+          //allCarDetailsArray.push(allCarDetails)
+          //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
+          client.messages
+            .create({
+              mediaUrl: [imgUrl],
+              from: 'whatsapp:+14155238886',
+              body: allCarDetails,
+              to: number
+            })
+            .then(message => console.log(message.sid))
+            .catch(err => {
+              console.log(err)
+              done()
+            })
+        }
+        // console.log('Lambo')
+        // console.log(imgUrl)
+
+      }
+    });
   })
 module.exports = router;

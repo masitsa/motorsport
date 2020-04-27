@@ -46,6 +46,7 @@ module.exports = {
           car_transmission: reqCar.car_transmission,
           car_price: reqCar.car_price,
           car_model_id: reqCar.car_model_id,
+          brand_id: reqCar.brand_id
         },
         (err, dbCar) => {
 
@@ -67,6 +68,7 @@ module.exports = {
                   car_price: reqCar.car_price,
                   phone_number: reqCar.phone_number,
                   car_model_id: reqCar.car_model_id,
+                  brand_id: reqCar.brand_id,
                   car_imgs: carUrl,
                 })
                 .then(() => {
@@ -128,7 +130,6 @@ module.exports = {
           "car_model_id",
           [sequelize.col("model_car.model_name"), "model_name"],
           [sequelize.col("model_car.brand_id"), "brand_id"],
-
           [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
           // [sequelize.col("model_car.brand_model.id"), "brand_id"],
           "car_price",
@@ -152,7 +153,7 @@ module.exports = {
             as: "brand_model",
             attributes: [],
           }]
-        }, ],
+        }],
       })
       .then((fetchedCar) => {
         // for (let i = 0; i < fetchedCar.length; i++) {
@@ -226,5 +227,162 @@ module.exports = {
         const customError = createError(err);
         result(customError, null);
       });
-  }
+  },
+
+  fetchCar(reqCar, result) {
+    // console.log("panamera");
+    // console.log(reqCar);
+    Car.findOne({
+        attributes: [
+          "car_title",
+          "car_location",
+          "car_year",
+          "car_transmission",
+          "car_price", [sequelize.col("model_car.model_name"), "model_name"],
+          [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
+          // [sequelize.col("model_car.brand_model.id"), "brand_id"],
+        ],
+        raw: true,
+        where: {
+          [Op.or]: [{
+              car_title: {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+            {
+              '$model_car.model_name$': {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+            {
+              '$model_car.brand_model.brand_name$': {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+          ],
+        },
+        include: [{
+          model: Model,
+          as: "model_car",
+          attributes: [],
+          include: [{
+            model: Brand,
+            as: "brand_model",
+            attributes: [],
+          }]
+        }, ],
+      })
+      .then((fetchedCar) => {
+        return result(null, fetchedCar);
+      })
+      .catch((err) => {
+        const customError = createError(err);
+        result(customError, null);
+      });
+  },
+
+  fetchAllCars(reqCar, result) {
+    Car.findAll({
+        attributes: [
+          "car_title",
+          "car_location",
+          "car_year",
+          "car_transmission",
+          "car_price",
+          "car_imgs", [sequelize.col("model_car.model_name"), "model_name"],
+          [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
+          // [sequelize.col("model_car.brand_model.id"), "brand_id"],
+        ],
+        raw: true,
+        where: {
+          [Op.or]: [{
+              car_title: {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+            {
+              '$model_car.model_name$': {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+            {
+              '$model_car.brand_model.brand_name$': {
+                [Op.like]: '%' + reqCar + '%'
+              }
+            },
+          ],
+        },
+        include: [{
+          model: Model,
+          as: "model_car",
+          attributes: [],
+          include: [{
+            model: Brand,
+            as: "brand_model",
+            attributes: [],
+          }]
+        }, ],
+      })
+      .then((fetchedAllCar) => {
+        // console.log('gt4')
+        // console.log(fetchedAllCar)
+        return result(null, fetchedAllCar);
+      })
+      .catch((err) => {
+        const customError = createError(err);
+        result(customError, null);
+      });
+  },
+
+  // getCar(car_title, brand_name, model_name, result) {
+  //   let where = {};
+  //   let modelWhere = {};
+  //   let brandWhere = {};
+  //   if (!isEmpty(car_title)) {
+  //     where["car_title"] = {
+  //       [Op.like]: "%" + car_title + "%",
+  //     };
+  //   }
+  //   if (!isEmpty(brand_name)) {
+  //     brandWhere["brand_name"] = {
+  //       [Op.like]: "%" + brand_name + "%",
+  //     };
+  //   }
+  //   if (!isEmpty(model_name)) {
+  //     modelWhere["model_name"] = {
+  //       [Op.like]: "%" + model_name + "%",
+  //     };
+  //   }
+  //   Car.findAll({
+  //       attributes: [
+  //         "car_title",
+  //         [sequelize.col("model_car.model_name"), "model_name"],
+  //         [sequelize.col("model_car.brand_model.brand_name"), "brand_name"],
+  //       ],
+  //       raw: true,
+  //       where: where,
+  //       include: [{
+  //         model: Model,
+  //         as: "model_car",
+  //         attributes: [],
+  //         where: modelWhere,
+  //         required: true,
+
+  //         include: [{
+  //           model: Brand,
+  //           as: "brand_model",
+  //           attributes: [],
+  //           where: brandWhere,
+  //           required: true,
+  //         }]
+  //       }],
+  //     })
+  //     .then((fetchedCar) => {
+  //       return result(null, fetchedCar);
+  //     })
+  //     .catch((err) => {
+  //       const customError = createError(err);
+  //       result(customError, null);
+  //     });
+  // }
 };
