@@ -209,7 +209,8 @@ router.post("/allWhatsappDetails",
         const authToken = '13ada5ee7cedca535494e467834718a2';
         const from = 'whatsapp:+14155238886';
         const client = require('twilio')(accountSid, authToken);
-        let number = req.body.From
+        let number = req.body.From;
+        console.log(number);
         let imgUrl;
         //let allCarDetailsArray = [];
 
@@ -248,7 +249,7 @@ router.post("/allWhatsappDetails",
             .create({
               mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
               from: from,
-              body: `It's taco time!`,
+              body: `Vehicle not found`,
               to: 'whatsapp:+254726149351'
             })
             .then(message => {
@@ -257,7 +258,7 @@ router.post("/allWhatsappDetails",
             })
             .catch(err => {
               console.log(err.message);
-              res.status(400).json({
+              res.status(200).json({
                 error: err.message
               });
               // done();
