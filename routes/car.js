@@ -240,9 +240,11 @@ router.post("/allWhatsappDetails",
                 body: allCarDetails,
                 to: number
               })
-              .then(message => console.log(message))
+              .then(message => res.status(200).json(message.sid))
               .catch(err => {
-                console.log(err);
+                res.status(400).json({
+                  error: err.message
+                });
               });
           }
         } else {
