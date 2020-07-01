@@ -205,12 +205,10 @@ router.post("/allWhatsappDetails",
       } else {
         // console.log('chiron')
         console.log(fetchedAllCarDetails)
-        const accountSid = 'AC151e1b5766621d85ece48c53e0d50f9c';
-        const authToken = '92757b3b1a07c9ef3462a35b3035cee5';
+        const accountSid = 'AC809ca4f7a14413cdf656ef4667b4cc9f';
+        const authToken = '13ada5ee7cedca535494e467834718a2';
+        const from = 'whatsapp:+14155238886';
         const client = require('twilio')(accountSid, authToken);
-        console.log({
-          client: client.messages
-        });
         let number = req.body.From
         let imgUrl;
         //let allCarDetailsArray = [];
@@ -235,7 +233,7 @@ router.post("/allWhatsappDetails",
             client.messages
               .create({
                 mediaUrl: [imgUrl],
-                from: 'whatsapp:+14155238886',
+                from: from,
                 body: allCarDetails,
                 to: number
               })
@@ -260,8 +258,8 @@ router.post("/allWhatsappDetails",
           // });
           client.messages
             .create({
-              mediaUrl: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'],
-              from: 'whatsapp:+14155238886',
+              mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
+              from: from,
               body: `It's taco time!`,
               to: 'whatsapp:+254726149351'
             })
@@ -282,5 +280,22 @@ router.post("/allWhatsappDetails",
 
       }
     });
-  })
+  });
+
+router.get("/file/:name", (req, res) => {
+  const name = req.params.name;
+
+  fs.readFile('./uploads/' + name, (err, data) => {
+    if (err) {
+      res.status(400).json({
+        error: {
+          upload: err.message
+        }
+      });
+    } else {
+      res.writeHead(200);
+      res.end(data);
+    }
+  });
+});
 module.exports = router;
