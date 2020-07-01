@@ -236,7 +236,7 @@ router.post("/allWhatsappDetails",
             //allCarDetailsArray.push(allCarDetails)
             //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
 
-            promises.push(client.messages
+            client.messages
               .create({
                 mediaUrl: [imgUrl],
                 from: from,
@@ -246,17 +246,8 @@ router.post("/allWhatsappDetails",
               .then(message => console.log(message))
               .catch(err => {
                 console.log(err);
-              }));
+              });
           }
-
-          Promise.all(promises)
-            .then(() => {
-              res.status(200).json(message)
-            })
-            .catch(err => {
-              res.status(400).json(err)
-              // done();
-            });
         } else {
           client.messages
             .create({
