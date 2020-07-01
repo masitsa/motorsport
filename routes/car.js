@@ -210,7 +210,10 @@ router.post("/allWhatsappDetails",
         const from = 'whatsapp:+14155238886';
         const client = require('twilio')(accountSid, authToken);
         let number = req.body.From;
-        console.log(number);
+        console.log({
+          number,
+          from
+        });
         let imgUrl;
         //let allCarDetailsArray = [];
 
@@ -242,7 +245,9 @@ router.post("/allWhatsappDetails",
               .catch(err => {
                 res.status(400).json(err)
                 // done();
-              })
+              });
+
+            Promises
           }
         } else {
           client.messages
