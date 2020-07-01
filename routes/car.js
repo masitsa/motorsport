@@ -209,63 +209,70 @@ router.post("/allWhatsappDetails",
         const authToken = '13ada5ee7cedca535494e467834718a2';
         const from = 'whatsapp:+14155238886';
         const client = require('twilio')(accountSid, authToken);
-        let number = req.body.To;
+        let number = req.body.From;
         console.log({
           body: req.body
         });
-        let imgUrl;
-        //let allCarDetailsArray = [];
+        if (number !== from) {
+          let imgUrl;
+          //let allCarDetailsArray = [];
 
-        if (fetchedAllCarDetails.length > 0) {
+          if (fetchedAllCarDetails.length > 0) {
 
-          for (let i = 0; i < fetchedAllCarDetails.length; i++) {
-            //carDetails
-            let title = fetchedAllCarDetails[i].car_title
-            let location = fetchedAllCarDetails[i].car_location
-            let year = fetchedAllCarDetails[i].car_year
-            let transmission = fetchedAllCarDetails[i].car_transmission
-            let price = fetchedAllCarDetails[i].car_price
-            let model = fetchedAllCarDetails[i].model_name
-            let brand = fetchedAllCarDetails[i].brand_name
-            let images = fetchedAllCarDetails[i].car_imgs
-            imgUrl = "http://169.239.171.102:8082/car/file/" + images
-            let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
-            //allCarDetailsArray.push(allCarDetails)
-            //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
+            for (let i = 0; i < fetchedAllCarDetails.length; i++) {
+              //carDetails
+              let title = fetchedAllCarDetails[i].car_title
+              let location = fetchedAllCarDetails[i].car_location
+              let year = fetchedAllCarDetails[i].car_year
+              let transmission = fetchedAllCarDetails[i].car_transmission
+              let price = fetchedAllCarDetails[i].car_price
+              let model = fetchedAllCarDetails[i].model_name
+              let brand = fetchedAllCarDetails[i].brand_name
+              let images = fetchedAllCarDetails[i].car_imgs
+              imgUrl = "http://169.239.171.102:8082/car/file/" + images
+              let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
+              //allCarDetailsArray.push(allCarDetails)
+              //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
 
+              client.messages
+                .create({
+                  mediaUrl: [imgUrl],
+                  from: from,
+                  body: allCarDetails,
+                  to: number
+                })
+                .then(message => res.status(200).json(message.sid))
+                .catch(err => {
+                  res.status(400).json({
+                    error: err.message
+                  });
+                });
+            }
+          } else {
             client.messages
               .create({
-                mediaUrl: [imgUrl],
+                mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
                 from: from,
-                body: allCarDetails,
+                body: modelName + ' not found',
                 to: number
               })
-              .then(message => res.status(200).json(message.sid))
+              .then(message => {
+                console.log(message);
+                res.status(200).json(message.sid)
+              })
               .catch(err => {
-                res.status(400).json({
+                console.log(err.message);
+                res.status(200).json({
                   error: err.message
                 });
+                // done();
               });
           }
+
         } else {
-          client.messages
-            .create({
-              mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
-              from: from,
-              body: modelName + ' not found',
-              to: number
-            })
-            .then(message => {
-              console.log(message);
-              res.status(200).json(message.sid)
-            })
-            .catch(err => {
-              console.log(err.message);
-              res.status(200).json({
-                error: err.message
-              });
-              // done();
-            });
+          res.status(200).json({
+            message: "Success"
+          })
         }
         // console.log('Lambo')
         // console.log(imgUrl)
