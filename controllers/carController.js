@@ -316,12 +316,14 @@ module.exports = {
           model: Model,
           as: "model_car",
           attributes: [],
+          required: false,
           include: [{
             model: Brand,
             as: "brand_model",
             attributes: [],
+            required: false
           }]
-        }, ],
+        }],
       })
       .then((fetchedAllCar) => {
         // console.log('gt4')
