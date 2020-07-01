@@ -247,9 +247,9 @@ router.post("/allWhatsappDetails",
                 });
             }
 
-            res.status(200).json({
-              message: "Success"
-            });
+            // res.status(200).json({
+            //   message: "Success"
+            // });
           } else {
             client.messages
               .create({
