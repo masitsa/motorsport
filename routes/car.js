@@ -209,7 +209,7 @@ router.post("/allWhatsappDetails",
         const authToken = '13ada5ee7cedca535494e467834718a2';
         const from = 'whatsapp:+14155238886';
         const client = require('twilio')(accountSid, authToken);
-        let number = req.body.From;
+        let number = req.body.To;
         console.log({
           body: req.body
         });
