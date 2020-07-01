@@ -208,8 +208,11 @@ router.post("/allWhatsappDetails",
         const accountSid = 'AC151e1b5766621d85ece48c53e0d50f9c';
         const authToken = '92757b3b1a07c9ef3462a35b3035cee5';
         const client = require('twilio')(accountSid, authToken);
+        console.log({
+          client: client.messages
+        });
         let number = req.body.From
-        let imgUrl
+        let imgUrl;
         //let allCarDetailsArray = [];
 
         if (fetchedAllCarDetails.length > 0) {
@@ -228,6 +231,7 @@ router.post("/allWhatsappDetails",
             let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
             //allCarDetailsArray.push(allCarDetails)
             //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
+
             client.messages
               .create({
                 mediaUrl: [imgUrl],
@@ -242,9 +246,36 @@ router.post("/allWhatsappDetails",
               })
           }
         } else {
-          res.status(400).json({
-            error: "Car not found"
-          });
+          // client.messages
+          //   .create({
+          //     mediaUrl: ['https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2020-mercedes-amg-gt-r-pro-126-1554739776.jpg?crop=0.609xw:0.995xh;0.248xw,0.00524xh&resize=1200:*'],
+          //     from: 'whatsapp:+14155238886',
+          //     body: "Car not found",
+          //     to: '+254726149351'
+          //   })
+          //   .then(message => res.status(200).json(message))
+          // .catch(err => {
+          //   res.status(400).json(err.message)
+          //   // done();
+          // });
+          client.messages
+            .create({
+              mediaUrl: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'],
+              from: 'whatsapp:+14155238886',
+              body: `It's taco time!`,
+              to: 'whatsapp:+254726149351'
+            })
+            .then(message => {
+              console.log(message);
+              res.status(200).json(message.sid)
+            })
+            .catch(err => {
+              console.log(err.message);
+              res.status(400).json({
+                error: err.message
+              });
+              // done();
+            });
         }
         // console.log('Lambo')
         // console.log(imgUrl)
