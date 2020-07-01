@@ -242,7 +242,19 @@ router.post("/allWhatsappDetails",
             })
         }
 }else{
-	res.status(400).json({error: "Car not found"});
+	// res.status(400).json({error: "Car not found"});
+	client.messages
+            .create({
+              mediaUrl: [imgUrl],
+              from: 'whatsapp:+14155238886',
+              body: "Car not found",
+              to: number
+            })
+            .then(message => res.status(200).json(message))
+            .catch(err => {
+              res.status(400).json(err)
+              // done();
+            })
 }
         // console.log('Lambo')
         // console.log(imgUrl)
