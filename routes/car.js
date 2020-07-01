@@ -225,7 +225,7 @@ router.post("/allWhatsappDetails",
             let model = fetchedAllCarDetails[i].model_name
             let brand = fetchedAllCarDetails[i].brand_name
             let images = fetchedAllCarDetails[i].car_imgs
-            imgUrl = "http://169.239.171.102:8082/uploads/" + images
+            imgUrl = "http://169.239.171.102:8082/car/file/" + images
             let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
             //allCarDetailsArray.push(allCarDetails)
             //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
@@ -244,18 +244,6 @@ router.post("/allWhatsappDetails",
               })
           }
         } else {
-          // client.messages
-          //   .create({
-          //     mediaUrl: ['https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/2020-mercedes-amg-gt-r-pro-126-1554739776.jpg?crop=0.609xw:0.995xh;0.248xw,0.00524xh&resize=1200:*'],
-          //     from: 'whatsapp:+14155238886',
-          //     body: "Car not found",
-          //     to: '+254726149351'
-          //   })
-          //   .then(message => res.status(200).json(message))
-          // .catch(err => {
-          //   res.status(400).json(err.message)
-          //   // done();
-          // });
           client.messages
             .create({
               mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
