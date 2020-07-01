@@ -5,8 +5,12 @@ module.exports = (sequelize, DataTypes) => {
       brand_name: DataTypes.STRING,
       createdAt: new Date(),
       updatedAt: new Date()
-    }, {}
-  );
+    }, {
+      timestamps: false,
+      freezeTableName: true,
+      tableName: 'brands',
+      operatorsAliases: false
+    });
   Brand.associate = function (models) {
     // associations can be defined here
     Brand.hasMany(models.Model, {

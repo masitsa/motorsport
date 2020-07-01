@@ -32,8 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       car_imgs: DataTypes.STRING
-    }, {}
-  );
+    }, {
+      timestamps: false,
+      freezeTableName: true,
+      tableName: 'cars',
+      operatorsAliases: false
+    });
   Car.associate = function (models) {
     // associations can be defined here
     Car.belongsTo(models.Model, {
