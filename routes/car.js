@@ -212,38 +212,40 @@ router.post("/allWhatsappDetails",
         let imgUrl
         //let allCarDetailsArray = [];
 
-	if(fetchedAllCarDetails.length > 0){
+        if (fetchedAllCarDetails.length > 0) {
 
-	for (let i = 0; i < fetchedAllCarDetails.length; i++) {
-          //carDetails
-          let title = fetchedAllCarDetails[i].car_title
-          let location = fetchedAllCarDetails[i].car_location
-          let year = fetchedAllCarDetails[i].car_year
-          let transmission = fetchedAllCarDetails[i].car_transmission
-          let price = fetchedAllCarDetails[i].car_price
-          let model = fetchedAllCarDetails[i].model_name
-          let brand = fetchedAllCarDetails[i].brand_name
-          let images = fetchedAllCarDetails[i].car_imgs
-          imgUrl = "http://169.239.171.102:8082/uploads/" + images
-          let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
-          //allCarDetailsArray.push(allCarDetails)
-          //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
-          client.messages
-            .create({
-              mediaUrl: [imgUrl],
-              from: 'whatsapp:+14155238886',
-              body: allCarDetails,
-              to: number
-            })
-            .then(message => res.status(200).json(message))
-            .catch(err => {
-              res.status(400).json(err)
-              // done();
-            })
+          for (let i = 0; i < fetchedAllCarDetails.length; i++) {
+            //carDetails
+            let title = fetchedAllCarDetails[i].car_title
+            let location = fetchedAllCarDetails[i].car_location
+            let year = fetchedAllCarDetails[i].car_year
+            let transmission = fetchedAllCarDetails[i].car_transmission
+            let price = fetchedAllCarDetails[i].car_price
+            let model = fetchedAllCarDetails[i].model_name
+            let brand = fetchedAllCarDetails[i].brand_name
+            let images = fetchedAllCarDetails[i].car_imgs
+            imgUrl = "http://169.239.171.102:8082/uploads/" + images
+            let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
+            //allCarDetailsArray.push(allCarDetails)
+            //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
+            client.messages
+              .create({
+                mediaUrl: [imgUrl],
+                from: 'whatsapp:+14155238886',
+                body: allCarDetails,
+                to: number
+              })
+              .then(message => res.status(200).json(message))
+              .catch(err => {
+                res.status(400).json(err.message);
+                // done();
+              })
+          }
+        } else {
+          res.status(400).json({
+            error: "Car not found"
+          });
         }
-}else{
-	res.status(400).json({error: "Car not found"});
-}
         // console.log('Lambo')
         // console.log(imgUrl)
 
