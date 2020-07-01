@@ -197,21 +197,24 @@ router.post("/whatsappDetails",
 router.post("/allWhatsappDetails",
   (req, res) => {
     // console.log('FORESTER')
-    // console.log(req.body)
+    console.log(req.body)
     let modelName = req.body.Body;
     CarController.fetchAllCars(modelName, (err, fetchedAllCarDetails) => {
       if (err) {
         res.status(400).json(err);
       } else {
         // console.log('chiron')
-        // console.log(fetchedAllCarDetails)
-        const accountSid = 'AC06bf23db88d97129122e566668258434';
-        const authToken = '4dc8b2964c86f294c43480290a39c68d';
+        console.log(fetchedAllCarDetails)
+        const accountSid = 'AC151e1b5766621d85ece48c53e0d50f9c';
+        const authToken = '92757b3b1a07c9ef3462a35b3035cee5';
         const client = require('twilio')(accountSid, authToken);
         let number = req.body.From
         let imgUrl
         //let allCarDetailsArray = [];
-        for (let i = 0; i < fetchedAllCarDetails.length; i++) {
+
+	if(fetchedAllCarDetails.length > 0){
+
+	for (let i = 0; i < fetchedAllCarDetails.length; i++) {
           //carDetails
           let title = fetchedAllCarDetails[i].car_title
           let location = fetchedAllCarDetails[i].car_location
@@ -221,7 +224,7 @@ router.post("/allWhatsappDetails",
           let model = fetchedAllCarDetails[i].model_name
           let brand = fetchedAllCarDetails[i].brand_name
           let images = fetchedAllCarDetails[i].car_imgs
-          imgUrl = "http://b0257933.ngrok.io/uploads/" + images
+          imgUrl = "http://169.239.171.102:8082/uploads/" + images
           let allCarDetails = "title-" + title + " location-" + location + " year-" + year + " transmission-" + transmission + " price-" + price + " model-" + model + " brand-" + brand
           //allCarDetailsArray.push(allCarDetails)
           //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
@@ -232,12 +235,15 @@ router.post("/allWhatsappDetails",
               body: allCarDetails,
               to: number
             })
-            .then(message => console.log(message.sid))
+            .then(message => res.status(200).json(message))
             .catch(err => {
-              console.log(err)
-              done()
+              res.status(400).json(err)
+              // done();
             })
         }
+}else{
+	res.status(400).json({error: "Car not found"});
+}
         // console.log('Lambo')
         // console.log(imgUrl)
 

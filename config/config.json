@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "carSales",
+    "username": "destination",
+    "password": "laikipia",
+    "database": "carsales",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
@@ -16,9 +16,9 @@
     "operatorsAliases": false
   },
   "production": {
-    "username": "root",
-    "password": "",
-    "database": "carSales",
+    "username": "destination",
+    "password": "laikipia",
+    "database": "carsales",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
