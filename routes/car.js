@@ -211,15 +211,12 @@ router.post("/allWhatsappDetails",
         const client = require('twilio')(accountSid, authToken);
         let number = req.body.From;
         console.log({
-          number,
-          from
+          body: res.body
         });
         let imgUrl;
         //let allCarDetailsArray = [];
 
         if (fetchedAllCarDetails.length > 0) {
-
-          let promises = [];
 
           for (let i = 0; i < fetchedAllCarDetails.length; i++) {
             //carDetails
