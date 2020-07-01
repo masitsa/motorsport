@@ -249,7 +249,7 @@ router.post("/allWhatsappDetails",
             .create({
               mediaUrl: ['http://169.239.171.102:8082/car/file/page-not-found.png'],
               from: from,
-              body: `Vehicle not found`,
+              body: modelName + ' not found',
               to: number
             })
             .then(message => {
