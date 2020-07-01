@@ -3,6 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 
+const delay = require('../utils/delay');
+
 const {
   CarController
 } = require("../controllers");
@@ -192,7 +194,7 @@ router.post("/whatsappDetails",
           })
       }
     });
-  })
+  });
 
 router.post("/allWhatsappDetails",
   (req, res) => {
@@ -236,30 +238,31 @@ router.post("/allWhatsappDetails",
               //allCarDetailsArray.push(allCarDetails)
               //  let toSendCarDetails = "These are the available cars" + allCarDetailsArray
 
-              promises.push(client.messages
+              delay(4000).then(() => client.messages
                 .create({
                   mediaUrl: [imgUrl],
                   from: from,
                   body: allCarDetails,
                   to: number
                 })
-                .then(message => console.log(message.sid))
+                .then(message => {
+                  console.log(message.sid);
+                  if (i === fetchedAllCarDetails.length - 1) {
+                    res.status(200).json({
+                      id: message.sid
+                    })
+                  }
+                })
                 .catch(err => {
                   console.log(err.message);
-                }));
+                  if (i === fetchedAllCarDetails.length - 1) {
+                    res.status(400).json({
+                      error: err.message
+                    })
+                  }
+                })
+              );
             }
-
-            Promise.all(promises)
-              .then(() => {
-                res.status(200).json({
-                  message: "Success"
-                });
-              })
-              .catch(err => {
-                res.status(400).json({
-                  error: err.message
-                });
-              })
           } else {
             client.messages
               .create({
